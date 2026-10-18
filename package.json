@@ -1,0 +1,11 @@
+{
+  "name": "book-pm-management",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "postinstall": "npm --prefix pulse install",
+    "dev": "npm --prefix pulse run dev",
+    "build": "npm --prefix pulse run build",
+    "preview": "npm --prefix pulse run preview"
+  }
+}
