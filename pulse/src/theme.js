@@ -12,6 +12,10 @@ const VIOLET_BRIGHT = brand.accentBright;
 const BORDER_VIOLET = `rgba(${brand.accentRGB},0.22)`;
 const GLOW_VIOLET = `rgba(${brand.accentBrightRGB},0.30)`;
 
+// York U Fitness secondary palette — only defined for the yorku brand.
+const TEAL = brand.accent2 || null;
+const TEAL_RGB = brand.accent2RGB || null;
+
 const theme = createTheme({
   palette: {
     mode: 'dark',
@@ -233,6 +237,12 @@ export const tokens = {
   chartGrid: 'rgba(255,255,255,0.05)',
   chartGradientStart: `rgba(${brand.accentBrightRGB},0.35)`,
   chartGradientEnd: `rgba(${brand.accentBrightRGB},0)`,
+  // York U Fitness extras — undefined on the default Pulse brand.
+  teal: TEAL,
+  tealDim12: TEAL_RGB ? `rgba(${TEAL_RGB},0.12)` : null,
+  tealBorder40: TEAL_RGB ? `rgba(${TEAL_RGB},0.40)` : null,
+  bgSoft: brand.bgSoft || null,
+  bgBorder: brand.bgBorder || null,
 };
 
 export default theme;

@@ -26,11 +26,16 @@ const BRANDS = {
   },
   yorku: {
     name: 'York U Fitness',
-    accent: '#E31837',        // York Red (PMS 186)
+    accent: '#E11837',        // York Red per course brand guide
     accentBright: '#FF3B54',  // brighter York red for glows/highlights on dark
-    accentRGB: '227,24,55',
+    accentRGB: '225,24,55',
     accentBrightRGB: '255,59,84',
     surfaceRaised: '#1C1B27',
+    // York U Fitness secondary palette (only present on the yorku brand)
+    accent2: '#0DC9AD',           // teal accent
+    accent2RGB: '13,201,173',
+    bgSoft: '#F2F2F2',            // light grey background
+    bgBorder: '#E1DEDB',          // light grey border
   },
 };
 
