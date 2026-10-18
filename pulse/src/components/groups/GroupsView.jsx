@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import ToggleButton from '@mui/material/ToggleButton';
@@ -67,23 +67,48 @@ export default function GroupsView() {
   const [testState, setTestState] = useState('happyPath');
   const [toast, setToast] = useState(null);
 
-  // When the test-state switcher changes, reset the feature and seed the
-  // matching profile (except emptyState, which leaves onboarding empty).
+  // First mount: if no profile is saved, show onboarding. We do NOT auto-seed
+  // on mount — that would wipe a returning user's joined group. The test-state
+  // switcher below is the only thing that resets + seeds.
   useEffect(() => {
+    if (!profile) {
+      setScreen('onboarding');
+    } else if (joinedGroupId) {
+      setScreen('mygroup');
+    } else {
+      setScreen('list');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // When the user picks a test state, reset the feature and seed the matching
+  // profile so the reviewer lands in the right scenario. Skipped on first mount.
+  const firstMount = useRef(true);
+  useEffect(() => {
+    if (firstMount.current) {
+      firstMount.current = false;
+      return;
+    }
     resetFeature();
     const p = PROFILES[testState];
     if (testState === 'emptyState') {
-      setScreen('onboarding'); // student must attempt to set windows to see empty state
+      // Seed the profile that produces no open matches, then go straight to the
+      // list so the empty state shows.
+      saveProfile(p);
+      setScreen('list');
     } else if (testState === 'guardrail') {
-      // Guardrail: pre-seed profile and skip straight into a joined women-only
-      // group so the reviewer sees the roster (first names only) immediately.
-      const saved = saveProfile(p);
+      saveProfile(p);
       // Auto-join the morning women-only group to show the roster view.
       const target = groups.find(
         (g) => g.preference === 'Women-only' && g.window === 'Mornings'
       );
       if (target) {
-        joinGroup(target.id).then(() => setScreen('mygroup')).catch(() => {});
+        // Defer the join so profile state has flushed before joinGroup reads it.
+        setTimeout(() => {
+          joinGroup(target.id).then(() => setScreen('mygroup')).catch(() => {
+            setScreen('list');
+          });
+        }, 0);
       } else {
         setScreen('list');
       }
