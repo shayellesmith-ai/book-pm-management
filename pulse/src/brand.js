@@ -18,10 +18,10 @@
 const BRANDS = {
   pulse: {
     name: 'Pulse',
-    accent: '#A855F7',
-    accentBright: '#C084FC',
-    accentRGB: '168,85,247',
-    accentBrightRGB: '192,132,252',
+    accent: '#E11837',
+    accentBright: '#FF3B54',
+    accentRGB: '225,24,55',
+    accentBrightRGB: '255,59,84',
     surfaceRaised: '#1C1B27',
     accent2: null,
     accent2RGB: null,
