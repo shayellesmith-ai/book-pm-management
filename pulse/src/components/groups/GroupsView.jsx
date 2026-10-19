@@ -9,7 +9,7 @@ import { tokens } from '../../theme';
 import { matchesStudent, isOpen } from '../../data/groups';
 import useGroups from '../../hooks/useGroups';
 import Onboarding from './Onboarding';
-import GroupList from './GroupList';
+import GroupList, { FormingGroupCard } from './GroupList';
 import GroupDetail from './GroupDetail';
 import MyGroup from './MyGroup';
 import BookingConfirmation from './BookingConfirmation';
@@ -66,6 +66,10 @@ export default function GroupsView() {
   const [selectedGroupId, setSelectedGroupId] = useState(null);
   const [testState, setTestState] = useState('happyPath');
   const [toast, setToast] = useState(null);
+  // In the errorState test, the FIRST join attempt fails so the reviewer sees
+  // the error + retry path. Subsequent attempts (the retry) succeed — that's
+  // the whole point of a retry: it should actually book.
+  const errorFailureUsed = useRef(false);
 
   // First mount: if no profile is saved, show onboarding. We do NOT auto-seed
   // on mount — that would wipe a returning user's joined group. The test-state
@@ -89,6 +93,7 @@ export default function GroupsView() {
       firstMount.current = false;
       return;
     }
+    errorFailureUsed.current = false;
     resetFeature();
     const p = PROFILES[testState];
     if (testState === 'emptyState') {
@@ -135,6 +140,16 @@ export default function GroupsView() {
     );
   }, [groups, profile]);
 
+  // Open groups in the same window, used as alternatives when the strict match
+  // is still forming (edge case). Relaxes the preference constraint, since the
+  // stated-preference group can't open yet.
+  const openAlternatives = useMemo(() => {
+    if (!profile) return [];
+    return groups.filter(
+      (g) => isOpen(g) && g.window === profile.availableWindows[0]
+    );
+  }, [groups, profile]);
+
   const handleOnboardSubmit = (p) => {
     saveProfile(p);
     setScreen('list');
@@ -147,9 +162,11 @@ export default function GroupsView() {
 
   const handleJoin = useCallback(
     async (group, opts) => {
-      // In errorState test, force the first join attempt to fail so the
-      // reviewer sees the error + retry path (no duplicate booking).
-      if (testState === 'errorState') {
+      // In errorState test, force only the FIRST join attempt to fail so the
+      // reviewer sees the error + retry path. The retry succeeds — no
+      // duplicate booking, because joinGroup is idempotent.
+      if (testState === 'errorState' && !errorFailureUsed.current) {
+        errorFailureUsed.current = true;
         try {
           await joinGroup(group.id, { simulateFailure: true });
         } catch {
@@ -218,20 +235,37 @@ export default function GroupsView() {
         {testState === 'edgeCase' && formingMatches.length > 0 && matchingGroups.length === 0 && (
           <EdgeCaseBanner
             forming={formingMatches}
-            openAlternatives={groups.filter(
-              (g) => isOpen(g) && g.window === profile.availableWindows[0]
-            )}
+            openAlternatives={openAlternatives}
           />
         )}
         {testState === 'edgeCase' && formingMatches.length > 0 && matchingGroups.length === 0 && (
+          // Show the forming group as a visible, labeled card so the student
+          // can see exactly which group matched them but hasn't opened yet.
+          <Box sx={{ maxWidth: 640, mx: 'auto', px: 2, pb: 1 }}>
+            <Typography variant="subtitle1" sx={{ fontSize: '0.75rem', color: 'text.secondary', mb: 1.5, textTransform: 'uppercase', letterSpacing: '0.12em' }}>
+              Your match — still forming
+            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              {formingMatches.map((g) => (
+                <FormingGroupCard key={g.id} group={g} onNotifyMe={handleNotifyMe} />
+              ))}
+            </Box>
+          </Box>
+        )}
+        {testState === 'edgeCase' && formingMatches.length > 0 && matchingGroups.length === 0 && openAlternatives.length > 0 && (
           // In the edge case, show nearest open groups in the same window as
           // joinable alternatives (relaxing the preference constraint, since
           // the stated-preference group can't open yet).
-          <GroupList
-            groups={groups.filter((g) => isOpen(g) && g.window === profile.availableWindows[0])}
-            onJoin={handleSelectGroup}
-            onNotifyMe={handleNotifyMe}
-          />
+          <Box sx={{ maxWidth: 640, mx: 'auto', px: 2, pt: 2 }}>
+            <Typography variant="subtitle1" sx={{ fontSize: '0.75rem', color: 'text.secondary', mb: 1.5, textTransform: 'uppercase', letterSpacing: '0.12em' }}>
+              Open groups in your window
+            </Typography>
+            <GroupList
+              groups={openAlternatives}
+              onJoin={handleSelectGroup}
+              onNotifyMe={handleNotifyMe}
+            />
+          </Box>
         )}
         {joinedGroup && (
           <Box sx={{ maxWidth: 640, mx: 'auto', px: 2, pt: 2 }}>
@@ -332,14 +366,14 @@ function EdgeCaseBanner({ forming, openAlternatives }) {
         }}
       >
         <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.5 }}>
-          These groups are still forming
+          Your match is still forming
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{ mb: 1, fontSize: '0.85rem' }}>
-          A group only opens once at least four students match its time. {forming.length} group{forming.length === 1 ? '' : 's'} matched you but {forming.length === 1 ? 'has' : 'have'} only {forming.map((g) => g.members.length).join(', ')} student{forming.length === 1 ? '' : 's'} so far.
+          We found {forming.length} group{forming.length === 1 ? '' : 's'} that fits your availability and preference, but it {forming.length === 1 ? 'has' : 'has'} only {forming.map((g) => g.members.length).join(', ')} student{forming.length === 1 ? '' : 's'} so far. A group opens once four students match its time. You can see the group below and ask to be notified when it opens.
         </Typography>
         {openAlternatives.length > 0 && (
           <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem' }}>
-            We've shown you the nearest open groups below instead — tap one to join.
+            We've also shown you open groups in your window — tap one to join now.
           </Typography>
         )}
       </Box>
