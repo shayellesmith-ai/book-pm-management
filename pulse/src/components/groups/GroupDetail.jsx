@@ -194,8 +194,9 @@ export default function GroupDetail({ group, onJoin, onBack }) {
             </Alert>
           )}
 
-          {/* Join action */}
-          {status !== 'success' && (
+          {/* Join action — hidden once an error is showing, so the retry
+              button inside the error alert is the only booking action. */}
+          {status !== 'success' && status !== 'error' && (
             <Button
               variant="contained"
               size="large"
