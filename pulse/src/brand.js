@@ -18,33 +18,30 @@
 const BRANDS = {
   pulse: {
     name: 'Pulse',
+    accent: '#A855F7',
+    accentBright: '#C084FC',
+    accentRGB: '168,85,247',
+    accentBrightRGB: '192,132,252',
+    surfaceRaised: '#1C1B27',
+    accent2: null,
+    accent2RGB: null,
+    bgSoft: '#0A0A0F',
+    bgBorder: '#2A2A3A',
+  },
+  yorku: {
+    name: 'York U Fitness',
     accent: '#E11837',
-    accentBright: '#E11837',
+    accentBright: '#FF3B54',
     accentRGB: '225,24,55',
-    accentBrightRGB: '225,24,55',
-    surfaceRaised: '#FFFFFF',
+    accentBrightRGB: '255,59,84',
+    surfaceRaised: '#1C1B27',
     accent2: '#0DC9AD',
     accent2RGB: '13,201,173',
     bgSoft: '#F2F2F2',
     bgBorder: '#E1DEDB',
   },
-  yorku: {
-    name: 'York U Fitness',
-    accent: '#E11837',        // York Red per course brand guide
-    accentBright: '#E11837',
-    accentRGB: '225,24,55',
-    accentBrightRGB: '255,59,84',
-    surfaceRaised: '#1C1B27',
-    // York U Fitness secondary palette (only present on the yorku brand)
-    accent2: '#0DC9AD',           // teal accent
-    accent2RGB: '13,201,173',
-    bgSoft: '#F2F2F2',            // light grey background
-    bgBorder: '#E1DEDB',          // light grey border
-  },
 };
 
-// The Vite mode is checked too, so `--mode yorku` selects York U Fitness even
-// in environments that don't load .env files (some browser IDEs skip them).
 const key =
   import.meta.env.VITE_BRAND === 'yorku' || import.meta.env.MODE === 'yorku'
     ? 'yorku'
