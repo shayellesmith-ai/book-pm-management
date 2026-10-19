@@ -324,10 +324,33 @@ export default function GroupsView() {
           exclusive
           onChange={(_, v) => v && setTestState(v)}
           aria-label="Groups test state"
-          sx={{ flexWrap: 'wrap', gap: 1, '& .MuiToggleButton-root': { borderRadius: '10px !important', border: '1px solid', borderColor: 'divider', px: 2 } }}
+          sx={{
+            flexWrap: 'wrap',
+            gap: 1,
+            '& .MuiToggleButton-root': {
+              borderRadius: '10px !important',
+              px: 2,
+              py: 0.75,
+              fontSize: '0.78rem',
+              fontWeight: 600,
+              color: '#20252B',
+              border: '1px solid #E1DEDB',
+              backgroundColor: '#FFFFFF',
+              '&:hover': {
+                borderColor: '#E11837',
+                backgroundColor: 'rgba(225,24,55,0.06)',
+              },
+              '&.Mui-selected': {
+                color: '#FFFFFF',
+                backgroundColor: '#E11837',
+                borderColor: '#E11837',
+                '&:hover': { backgroundColor: '#C50F2E', borderColor: '#C50F2E' },
+              },
+            },
+          }}
         >
           {TEST_STATES.map((s) => (
-            <ToggleButton key={s.key} value={s.key} id={`groups-test-${s.key}`} sx={{ fontSize: '0.72rem' }}>
+            <ToggleButton key={s.key} value={s.key} id={`groups-test-${s.key}`}>
               {s.label}
             </ToggleButton>
           ))}
