@@ -66,10 +66,6 @@ export default function GroupsView() {
   const [selectedGroupId, setSelectedGroupId] = useState(null);
   const [testState, setTestState] = useState('happyPath');
   const [toast, setToast] = useState(null);
-  // In the errorState test, the FIRST join attempt fails so the reviewer sees
-  // the error + retry path. Subsequent attempts (the retry) succeed — that's
-  // the whole point of a retry: it should actually book.
-  const errorFailureUsed = useRef(false);
 
   // First mount: if no profile is saved, show onboarding. We do NOT auto-seed
   // on mount — that would wipe a returning user's joined group. The test-state
@@ -93,7 +89,6 @@ export default function GroupsView() {
       firstMount.current = false;
       return;
     }
-    errorFailureUsed.current = false;
     resetFeature();
     const p = PROFILES[testState];
     if (testState === 'emptyState') {
@@ -162,11 +157,11 @@ export default function GroupsView() {
 
   const handleJoin = useCallback(
     async (group, opts) => {
-      // In errorState test, force only the FIRST join attempt to fail so the
-      // reviewer sees the error + retry path. The retry succeeds — no
-      // duplicate booking, because joinGroup is idempotent.
-      if (testState === 'errorState' && !errorFailureUsed.current) {
-        errorFailureUsed.current = true;
+      // In errorState test, force every join attempt to fail so the reviewer
+      // sees the error + retry path. Each retry shows a clear message that the
+      // connection is still down — no silent loops. No duplicate is ever
+      // created, because joinGroup is idempotent.
+      if (testState === 'errorState') {
         try {
           await joinGroup(group.id, { simulateFailure: true });
         } catch {

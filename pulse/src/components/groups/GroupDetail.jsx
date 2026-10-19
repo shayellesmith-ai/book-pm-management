@@ -34,6 +34,7 @@ import {
 export default function GroupDetail({ group, onJoin, onBack }) {
   const [status, setStatus] = useState('idle'); // idle | loading | error | success
   const [errorMsg, setErrorMsg] = useState('');
+  const [attempts, setAttempts] = useState(0); // failed attempts so far
 
   const handleJoin = async () => {
     setStatus('loading');
@@ -43,6 +44,7 @@ export default function GroupDetail({ group, onJoin, onBack }) {
       setStatus('success');
     } catch (err) {
       setStatus('error');
+      setAttempts(1);
       setErrorMsg(
         "We couldn't reach the booking system — your spot wasn't booked. No duplicate was created. Please retry."
       );
@@ -56,7 +58,16 @@ export default function GroupDetail({ group, onJoin, onBack }) {
       await onJoin(group, { simulateFailure: false });
       setStatus('success');
     } catch (err) {
+      const next = attempts + 1;
+      setAttempts(next);
       setStatus('error');
+      setErrorMsg(
+        next === 2
+          ? "Still no connection — your spot still isn't booked, and no duplicate was created. You can try again, or come back and book later."
+          : next === 3
+          ? "We're still unable to reach the booking system. Your booking is safe to retry — nothing partial was saved. If this keeps happening, try again in a few minutes."
+          : "Connection still down. No booking was created and no duplicate exists. Please try again later."
+      );
     }
   };
 
@@ -171,8 +182,13 @@ export default function GroupDetail({ group, onJoin, onBack }) {
             <Alert severity="error" id="join-error" sx={{ alignItems: 'center' }}>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, width: '100%' }}>
                 <Typography variant="body2">{errorMsg}</Typography>
+                {attempts > 1 && (
+                  <Typography variant="caption" color="error" sx={{ opacity: 0.8 }}>
+                    Attempt {attempts} of booking failed.
+                  </Typography>
+                )}
                 <Button variant="outlined" color="error" size="small" onClick={handleRetry} id="retry-join">
-                  Retry booking
+                  {attempts >= 3 ? 'Try again later' : 'Retry booking'}
                 </Button>
               </Box>
             </Alert>
