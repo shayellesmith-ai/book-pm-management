@@ -17,7 +17,7 @@ const ACCENT_RGB = '225,24,55';
 const ACCENT_BRIGHT_RGB = '255,59,84';
 const TEAL = '#0DC9AD';
 const TEAL_RGB = '13,201,173';
-const BG_SOFT = '#F7F6F4';
+const BG_SOFT = '#F2F2F2';
 const BG_BORDER = '#E1DEDB';
 
 const groupsTheme = createTheme({
