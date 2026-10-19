@@ -156,8 +156,16 @@ export function isOpen(group) {
   return group.members.length >= 4;
 }
 
+export function isFull(group) {
+  return group.members.length >= group.capacity;
+}
+
 export function spotsLeft(group) {
   return Math.max(0, group.capacity - group.members.length);
+}
+
+export function canJoin(group) {
+  return isOpen(group) && !isFull(group);
 }
 
 export function describeWindow(window) {

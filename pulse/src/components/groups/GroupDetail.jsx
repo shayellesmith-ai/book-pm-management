@@ -18,6 +18,7 @@ import {
   sessionLabel,
   spotsLeft,
   isOpen,
+  isFull,
   nextSessionDate,
   formatDateLong,
 } from '../../data/groups';
@@ -72,6 +73,7 @@ export default function GroupDetail({ group, onJoin, onBack }) {
   };
 
   const open = isOpen(group);
+  const full = isFull(group);
   const left = spotsLeft(group);
   const next = nextSessionDate(group);
 
@@ -177,6 +179,13 @@ export default function GroupDetail({ group, onJoin, onBack }) {
             </Typography>
           </Box>
 
+          {/* Full-group notice — a full group can't be joined. */}
+          {full && (
+            <Alert severity="info" id="group-full-notice" icon={<GroupsIcon />}>
+              This group is full ({group.members.length}/{group.capacity}). Pick another group from the list, or ask to be notified when a spot opens.
+            </Alert>
+          )}
+
           {/* Error state */}
           {status === 'error' && (
             <Alert severity="error" id="join-error" sx={{ alignItems: 'center' }}>
@@ -195,8 +204,9 @@ export default function GroupDetail({ group, onJoin, onBack }) {
           )}
 
           {/* Join action — hidden once an error is showing, so the retry
-              button inside the error alert is the only booking action. */}
-          {status !== 'success' && status !== 'error' && (
+              button inside the error alert is the only booking action.
+              Also hidden when the group is full (no spots to book). */}
+          {status !== 'success' && status !== 'error' && !full && (
             <Button
               variant="contained"
               size="large"

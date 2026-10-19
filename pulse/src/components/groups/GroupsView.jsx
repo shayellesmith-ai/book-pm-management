@@ -6,7 +6,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import { tokens } from '../../theme';
-import { matchesStudent, isOpen } from '../../data/groups';
+import { matchesStudent, isOpen, isFull } from '../../data/groups';
 import useGroups from '../../hooks/useGroups';
 import Onboarding from './Onboarding';
 import GroupList, { FormingGroupCard } from './GroupList';
@@ -123,7 +123,7 @@ export default function GroupsView() {
     if (!profile) return [];
     return groups
       .filter((g) => matchesStudent(g, profile))
-      .filter(isOpen); // only open groups shown as joinable
+      .filter((g) => isOpen(g) && !isFull(g)); // only open groups with spots shown as joinable
   }, [groups, profile]);
 
   // Edge case: if the student's only matches are forming (<4), surface the
@@ -137,11 +137,11 @@ export default function GroupsView() {
 
   // Open groups in the same window, used as alternatives when the strict match
   // is still forming (edge case). Relaxes the preference constraint, since the
-  // stated-preference group can't open yet.
+  // stated-preference group can't open yet. Excludes full groups.
   const openAlternatives = useMemo(() => {
     if (!profile) return [];
     return groups.filter(
-      (g) => isOpen(g) && g.window === profile.availableWindows[0]
+      (g) => isOpen(g) && !isFull(g) && g.window === profile.availableWindows[0]
     );
   }, [groups, profile]);
 

@@ -11,7 +11,7 @@ import ScheduleIcon from '@mui/icons-material/Schedule';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import { tokens } from '../../theme';
-import { spotsLeft, isOpen, sessionLabel } from '../../data/groups';
+import { spotsLeft, isOpen, isFull, sessionLabel } from '../../data/groups';
 
 /**
  * Group list: shows matching, open groups of 4–8 students. Each card is a
@@ -61,6 +61,7 @@ export default function GroupList({ groups, onJoin, onNotifyMe }) {
         {groups.map((g) => {
           const left = spotsLeft(g);
           const open = isOpen(g);
+          const full = isFull(g);
           return (
             <Card key={g.id} id={`group-card-${g.id}`}>
               <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
@@ -93,11 +94,11 @@ export default function GroupList({ groups, onJoin, onNotifyMe }) {
                     </Box>
                   </Box>
                   <Box sx={{ textAlign: 'right', flexShrink: 0 }}>
-                    <Typography variant="body2" sx={{ fontWeight: 600, color: 'primary.light' }}>
+                    <Typography variant="body2" sx={{ fontWeight: 600, color: full ? 'text.secondary' : 'primary.light' }}>
                       {g.members.length}/{g.capacity}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
-                      {left} spot{left === 1 ? '' : 's'}
+                      {full ? 'full' : `${left} spot${left === 1 ? '' : 's'}`}
                     </Typography>
                   </Box>
                 </Box>
@@ -130,7 +131,7 @@ export default function GroupList({ groups, onJoin, onNotifyMe }) {
                     borderRadius: 3,
                     backgroundColor: tokens.accentDim08,
                     '& .MuiLinearProgress-bar': {
-                      backgroundColor: open ? (tokens.teal || tokens.violetBright) : tokens.violetBright,
+                      backgroundColor: full ? 'text.disabled' : open ? (tokens.teal || tokens.violetBright) : tokens.violetBright,
                       borderRadius: 3,
                     },
                   }}
@@ -141,9 +142,9 @@ export default function GroupList({ groups, onJoin, onNotifyMe }) {
                   fullWidth
                   onClick={() => onJoin(g)}
                   id={`join-group-${g.id}`}
-                  disabled={!open}
+                  disabled={!open || full}
                 >
-                  {open ? 'Join with one tap' : 'Forming — not open yet'}
+                  {full ? 'Full — try another group' : open ? 'Join with one tap' : 'Forming — not open yet'}
                 </Button>
               </CardContent>
             </Card>
