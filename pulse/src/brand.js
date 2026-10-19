@@ -18,16 +18,20 @@
 const BRANDS = {
   pulse: {
     name: 'Pulse',
-    accent: '#8B5CF6',        // violet
-    accentBright: '#A855F7',  // brighter violet
-    accentRGB: '139,92,246',
-    accentBrightRGB: '168,85,247',
-    surfaceRaised: '#1C1B27',
+    accent: '#E11837',
+    accentBright: '#E11837',
+    accentRGB: '225,24,55',
+    accentBrightRGB: '225,24,55',
+    surfaceRaised: '#FFFFFF',
+    accent2: '#0DC9AD',
+    accent2RGB: '13,201,173',
+    bgSoft: '#F2F2F2',
+    bgBorder: '#E1DEDB',
   },
   yorku: {
     name: 'York U Fitness',
     accent: '#E11837',        // York Red per course brand guide
-    accentBright: '#FF3B54',  // brighter York red for glows/highlights on dark
+    accentBright: '#E11837',
     accentRGB: '225,24,55',
     accentBrightRGB: '255,59,84',
     surfaceRaised: '#1C1B27',

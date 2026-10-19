@@ -2,15 +2,13 @@ import { createTheme } from '@mui/material/styles';
 import { brand } from './brand';
 
 /**
- * Design tokens — a dark, single-accent theme inspired by the book cover.
- * "A quiet control panel at night." The accent color comes from the active
- * brand (Pulse violet by default; see brand.js).
+ * Design tokens for the warm, encouraging York U Fitness experience.
  */
 
 const VIOLET = brand.accent;
 const VIOLET_BRIGHT = brand.accentBright;
-const BORDER_VIOLET = `rgba(${brand.accentRGB},0.22)`;
-const GLOW_VIOLET = `rgba(${brand.accentBrightRGB},0.30)`;
+const BORDER_VIOLET = brand.bgBorder || '#E1DEDB';
+const GLOW_VIOLET = `rgba(${brand.accentBrightRGB},0.10)`;
 
 // York U Fitness secondary palette — only defined for the yorku brand.
 const TEAL = brand.accent2 || null;
@@ -18,18 +16,18 @@ const TEAL_RGB = brand.accent2RGB || null;
 
 const theme = createTheme({
   palette: {
-    mode: 'dark',
+    mode: 'light',
     background: {
-      default: '#0A0A0F',
-      paper: '#14141C',
+      default: brand.bgSoft || '#F2F2F2',
+      paper: '#FFFFFF',
     },
     primary: {
       main: VIOLET,
       light: VIOLET_BRIGHT,
     },
     text: {
-      primary: '#F5F5FA',
-      secondary: '#8E8EA0',
+      primary: '#20252B',
+      secondary: '#5F6872',
     },
     divider: BORDER_VIOLET,
   },
@@ -89,15 +87,8 @@ const theme = createTheme({
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          backgroundColor: '#0A0A0F',
-          // Subtle circuit-grid background
-          backgroundImage: `
-            linear-gradient(${BORDER_VIOLET} 1px, transparent 1px),
-            linear-gradient(90deg, ${BORDER_VIOLET} 1px, transparent 1px),
-            radial-gradient(ellipse at 0% 100%, ${GLOW_VIOLET} 0%, transparent 50%)
-          `,
-          backgroundSize: '60px 60px, 60px 60px, 100% 100%',
-          backgroundPosition: 'center center',
+          backgroundColor: brand.bgSoft || '#F2F2F2',
+          backgroundImage: `radial-gradient(ellipse at 0% 100%, ${GLOW_VIOLET} 0%, transparent 50%)`,
           backgroundAttachment: 'fixed',
         },
       },
@@ -105,14 +96,14 @@ const theme = createTheme({
     MuiCard: {
       styleOverrides: {
         root: {
-          backgroundColor: '#14141C',
+          backgroundColor: '#FFFFFF',
           border: `1px solid ${BORDER_VIOLET}`,
           borderRadius: 12,
-          boxShadow: `0 0 24px rgba(${brand.accentBrightRGB},0.12)`,
+          boxShadow: '0 4px 16px rgba(32,37,43,0.08)',
           transition: 'box-shadow 0.3s ease, border-color 0.3s ease',
           '&:hover': {
-            boxShadow: `0 0 32px rgba(${brand.accentBrightRGB},0.20)`,
-            borderColor: `rgba(${brand.accentRGB},0.40)`,
+            boxShadow: '0 6px 20px rgba(32,37,43,0.12)',
+            borderColor: brand.accent,
           },
         },
       },
@@ -149,7 +140,7 @@ const theme = createTheme({
     MuiBottomNavigation: {
       styleOverrides: {
         root: {
-          backgroundColor: '#14141C',
+          backgroundColor: '#FFFFFF',
           borderTop: `1px solid ${BORDER_VIOLET}`,
         },
       },
@@ -157,7 +148,7 @@ const theme = createTheme({
     MuiBottomNavigationAction: {
       styleOverrides: {
         root: {
-          color: '#8E8EA0',
+          color: '#5F6872',
           '&.Mui-selected': {
             color: VIOLET_BRIGHT,
           },
@@ -171,7 +162,7 @@ const theme = createTheme({
           fontWeight: 600,
           letterSpacing: '0.10em',
           textTransform: 'uppercase',
-          color: '#8E8EA0',
+          color: '#5F6872',
           '&.Mui-selected': {
             color: VIOLET_BRIGHT,
           },
@@ -204,7 +195,7 @@ const theme = createTheme({
     MuiDialog: {
       styleOverrides: {
         paper: {
-          backgroundColor: '#1C1B27',
+          backgroundColor: '#FFFFFF',
           border: `1px solid ${BORDER_VIOLET}`,
         },
       },
@@ -212,9 +203,9 @@ const theme = createTheme({
     MuiTooltip: {
       styleOverrides: {
         tooltip: {
-          backgroundColor: '#1C1B27',
+          backgroundColor: '#FFFFFF',
           border: `1px solid ${BORDER_VIOLET}`,
-          color: '#F5F5FA',
+          color: '#FFFFFF',
         },
       },
     },
@@ -234,7 +225,7 @@ export const tokens = {
   accentDim15: `rgba(${brand.accentRGB},0.15)`,
   accentBorder40: `rgba(${brand.accentRGB},0.40)`,
   surfaceRaised: brand.surfaceRaised,
-  chartGrid: 'rgba(255,255,255,0.05)',
+  chartGrid: 'rgba(32,37,43,0.10)',
   chartGradientStart: `rgba(${brand.accentBrightRGB},0.35)`,
   chartGradientEnd: `rgba(${brand.accentBrightRGB},0)`,
   // York U Fitness extras — undefined on the default Pulse brand.
