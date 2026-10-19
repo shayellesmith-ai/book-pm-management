@@ -5,7 +5,9 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-import { tokens } from '../../theme';
+import { ThemeProvider } from '@mui/material/styles';
+import { groupsTokens as tokens } from '../../groupsTheme';
+import groupsTheme from '../../groupsTheme';
 import { matchesStudent, isOpen, isFull } from '../../data/groups';
 import useGroups from '../../hooks/useGroups';
 import Onboarding from './Onboarding';
@@ -305,8 +307,9 @@ export default function GroupsView() {
   }
 
   return (
-    <Box>
-      {content}
+    <ThemeProvider theme={groupsTheme}>
+      <Box>
+        {content}
 
       {/* Test-state switcher */}
       <Box sx={{ maxWidth: 640, mx: 'auto', px: 2, py: 3 }}>
@@ -345,6 +348,7 @@ export default function GroupsView() {
         ) : undefined}
       </Snackbar>
     </Box>
+    </ThemeProvider>
   );
 }
 

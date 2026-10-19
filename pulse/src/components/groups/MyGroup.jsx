@@ -17,7 +17,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { tokens } from '../../theme';
+import { groupsTokens as tokens } from '../../groupsTheme';
 import {
   sessionLabel,
   nextSessionDate,

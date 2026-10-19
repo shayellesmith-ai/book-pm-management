@@ -8,7 +8,7 @@ import Chip from '@mui/material/Chip';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import EventRepeatIcon from '@mui/icons-material/EventRepeat';
-import { tokens } from '../../theme';
+import { groupsTokens as tokens } from '../../groupsTheme';
 import { sessionLabel, nextSessionDate, formatDateLong } from '../../data/groups';
 
 /**

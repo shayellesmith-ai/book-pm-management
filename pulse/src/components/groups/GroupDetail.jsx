@@ -13,7 +13,7 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import EventRepeatIcon from '@mui/icons-material/EventRepeat';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { tokens } from '../../theme';
+import { groupsTokens as tokens } from '../../groupsTheme';
 import {
   sessionLabel,
   spotsLeft,

@@ -10,7 +10,7 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
-import { tokens } from '../../theme';
+import { groupsTokens as tokens } from '../../groupsTheme';
 import { spotsLeft, isOpen, isFull, sessionLabel } from '../../data/groups';
 
 /**

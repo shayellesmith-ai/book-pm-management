@@ -12,7 +12,7 @@ import Checkbox from '@mui/material/Checkbox';
 import Chip from '@mui/material/Chip';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import GroupIcon from '@mui/icons-material/Group';
-import { tokens } from '../../theme';
+import { groupsTokens as tokens } from '../../groupsTheme';
 import { WINDOWS, GROUP_PREFERENCES, describeWindow } from '../../data/groups';
 
 /**
